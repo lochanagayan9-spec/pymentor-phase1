@@ -1,17 +1,17 @@
-﻿# 🐍 PyMentor: Domain-Restricted Python Code Understanding Chatbot
+# ?? PyMentor: Domain-Restricted Python Code Understanding Chatbot
 
 PyMentor is an intelligent virtual assistant and senior pedagogical tutor built specifically for understanding, analyzing, and explaining Python code. Powered by Google Gemini API and FastAPI, PyMentor enforces strict domain boundaries, maintains multi-turn conversation memory, dynamically injects an external knowledge base, provides honest "I don't know" grounding, and logs every interaction with latency telemetry to a local SQLite database.
 
 ---
 
-## 🌟 Key Features & Requirements Coverage
+## ?? Key Features & Requirements Coverage
 
 | # | Requirement | Implementation in PyMentor |
 |---|---|---|
 | **1** | **Chat Interface** | Modern, responsive Web UI with syntax highlighting (`highlight.js`), Markdown parsing (`marked.js`), one-click "Copy Code" buttons, latency badges, and SQLite log drawer. |
 | **2** | **Backend** | Fast, asynchronous Python backend using **FastAPI** + **Uvicorn**, calling Google Gemini API via the official `google-genai` SDK. |
 | **3** | **System Prompt** | Modular 4-layer prompt architecture: Persona & Role, Curated Knowledge Base, Task Instructions & Boundaries, and Output Formatting. |
-| **4** | **Custom Knowledge Base** | Domain knowledge stored in an external file (`data/knowledge.md`) and loaded dynamically into the prompt at runtime—never hardcoded in Python code. |
+| **4** | **Custom Knowledge Base** | Domain knowledge stored in an external file (`data/knowledge.md`) and loaded dynamically into the prompt at runtime�never hardcoded in Python code. |
 | **5** | **Conversation Memory** | In-memory session manager (`ConversationMemory`) maintaining multi-turn context with sliding-window protection and session reset. |
 | **6** | **Out-of-Scope Handling** | Dual-tier guardrail system (heuristics + system prompt) that politely declines non-Python queries (cooking, politics, Java, movies) and restates allowed Python capabilities. |
 | **7** | **"I Don'\''t Know" Behavior** | Grounded response policy: for undocumented third-party or fictitious libraries (`quantum_teleporter_v9`), the assistant explicitly admits lack of verified knowledge rather than hallucinating. |
@@ -21,7 +21,7 @@ PyMentor is an intelligent virtual assistant and senior pedagogical tutor built 
 
 ---
 
-## 🎭 Persona & Tone: *The Patient Python Senior Architect*
+## ?? Persona & Tone: *The Patient Python Senior Architect*
 
 * **Core Identity:** An approachable, highly experienced senior Python software engineer and mentor.
 * **Tone:** Patient, encouraging, mechanically rigorous, and strictly PEP 8 compliant.
@@ -33,48 +33,48 @@ PyMentor is an intelligent virtual assistant and senior pedagogical tutor built 
 
 ---
 
-## 🏗️ Project Architecture
+## ??? Project Architecture
 
 ```
 pymentor/
-├── .env.example              # Template for environment variables
-├── .env                      # Local secret file (gitignored)
-├── .gitignore                # Protects secrets, caches, and databases
-├── requirements.txt          # Python dependencies
-├── README.md                 # Project documentation and guide
-│
-├── data/
-│   ├── knowledge.md          # External domain knowledge base (Layer 2)
-│   └── pymentor_logs.db      # SQLite chat logging database
-│
-├── app/
-│   ├── __init__.py
-│   ├── config.py             # Settings, paths, and environment loader
-│   ├── database.py           # SQLite connection, logging, and analytics
-│   ├── memory.py             # Conversation session memory manager
-│   ├── prompt_builder.py     # 4-layer system prompt assembler & guardrails
-│   ├── agent.py              # PyMentor agent core (Gemini API & test mock)
-│   ├── main.py               # FastAPI application & REST endpoints
-│   └── static/               # Frontend Single Page Application
-│       ├── index.html        # Responsive Chat UI & SQLite Log Modal
-│       ├── css/style.css     # Dark-mode styling, badges, and layout
-│       └── js/app.js         # Chat client, syntax highlighting, and copy buttons
-│
-├── docs/
-│   ├── limitations.md        # Documented system limitations & failure modes
-│   └── test_report.md        # Detailed report of 22 automated test scenarios
-│
-└── tests/
-    ├── test_prompt_and_kb.py # Tests for knowledge loading & prompt layers
-    ├── test_memory.py        # Tests for multi-turn history & sliding window
-    ├── test_guardrails.py    # Tests for out-of-scope refusals & 'I don't know'
-    ├── test_database.py      # Tests for SQLite logging & latency metrics
-    └── test_api_endpoints.py # Tests for FastAPI endpoints & input validation
++-- .env.example              # Template for environment variables
++-- .env                      # Local secret file (gitignored)
++-- .gitignore                # Protects secrets, caches, and databases
++-- requirements.txt          # Python dependencies
++-- README.md                 # Project documentation and guide
+�
++-- data/
+�   +-- knowledge.md          # External domain knowledge base (Layer 2)
+�   +-- pymentor_logs.db      # SQLite chat logging database
+�
++-- app/
+�   +-- __init__.py
+�   +-- config.py             # Settings, paths, and environment loader
+�   +-- database.py           # SQLite connection, logging, and analytics
+�   +-- memory.py             # Conversation session memory manager
+�   +-- prompt_builder.py     # 4-layer system prompt assembler & guardrails
+�   +-- agent.py              # PyMentor agent core (Gemini API & test mock)
+�   +-- main.py               # FastAPI application & REST endpoints
+�   +-- static/               # Frontend Single Page Application
+�       +-- index.html        # Responsive Chat UI & SQLite Log Modal
+�       +-- css/style.css     # Dark-mode styling, badges, and layout
+�       +-- js/app.js         # Chat client, syntax highlighting, and copy buttons
+�
++-- docs/
+�   +-- limitations.md        # Documented system limitations & failure modes
+�   +-- test_report.md        # Detailed report of 22 automated test scenarios
+�
++-- tests/
+    +-- test_prompt_and_kb.py # Tests for knowledge loading & prompt layers
+    +-- test_memory.py        # Tests for multi-turn history & sliding window
+    +-- test_guardrails.py    # Tests for out-of-scope refusals & 'I don't know'
+    +-- test_database.py      # Tests for SQLite logging & latency metrics
+    +-- test_api_endpoints.py # Tests for FastAPI endpoints & input validation
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## ?? Quick Start Guide
 
 ### 1. Installation
 Clone or navigate to the project directory and install dependencies:
@@ -91,7 +91,7 @@ cp .env.example .env
 Open `.env` and add your Google Gemini API key:
 ```ini
 GEMINI_API_KEY=your_actual_gemini_api_key_here
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-flash-lite-latest
 ```
 *(Note: If no API key is provided, PyMentor automatically runs in its intelligent offline test simulation mode!)*
 
@@ -109,7 +109,7 @@ http://127.0.0.1:8000
 
 ---
 
-## 🧪 Systematic Testing
+## ?? Systematic Testing
 
 Run the automated test suite with pytest:
 ```bash
@@ -126,9 +126,9 @@ All 22 unit and integration tests verify:
 
 ---
 
-## 📊 SQLite Chat Inspector
+## ?? SQLite Chat Inspector
 
-Click the **"📊 DB Logs"** button in the top right of the Web UI to open the real-time SQLite analytics and log inspector drawer. It displays:
+Click the **"?? DB Logs"** button in the top right of the Web UI to open the real-time SQLite analytics and log inspector drawer. It displays:
 - Total interactions count
 - Average response time in milliseconds
 - Total tokens processed
@@ -137,7 +137,7 @@ Click the **"📊 DB Logs"** button in the top right of the Web UI to open the r
 
 ---
 
-## 📄 Documentation
+## ?? Documentation
 
 - [System Limitations Document](docs/limitations.md): Detailed analysis of operational boundaries, safety rules, and failure modes.
 - [Systematic Test Report](docs/test_report.md): Breakdown of the 22 automated test scenarios and results.
