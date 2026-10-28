@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyMentor - Domain-Restricted Python Code Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-icon">🐍</div>
+        <div class="header-titles">
+          <h1>PyMentor <span class="badge">Gemini Powered</span></h1>
+          <p class="subtitle">Domain-Restricted Virtual Tutor for Python Code Understanding</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="status-pill" id="session-badge" title="Click to copy Session ID">
+          <span class="dot"></span>
+          <span id="session-id-display">Session: Loading...</span>
+        </div>
+        <button id="btn-view-logs" class="btn btn-secondary" title="Inspect SQLite Chat Logs">
+          📊 DB Logs
+        </button>
+        <button id="btn-reset-session" class="btn btn-outline" title="Clear memory and start fresh session">
+          🔄 Reset Memory
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Chat Workspace -->
+    <main class="chat-workspace">
+      <!-- Conversation Message Stream -->
+      <div class="chat-messages" id="chat-messages">
+        <!-- Welcome Hero Message -->
+        <div class="message-row assistant-row">
+          <div class="avatar">🐍</div>
+          <div class="bubble assistant-bubble">
+            <div class="assistant-name">PyMentor</div>
+            <div class="bubble-content markdown-body">
+              <p>Hello! I am <strong>PyMentor</strong>, your dedicated senior Python architect and pedagogical tutor.</p>
+              <p>I am strictly focused on <strong>Python code understanding</strong>. Here is how I can assist you:</p>
+              <ul>
+                <li><strong>Deconstruct Python code snippets</strong> and explain execution mechanics step-by-step.</li>
+                <li><strong>Clarify Python memory architecture</strong> (mutability, object identity, references, shallow vs deep copy).</li>
+                <li><strong>Demystify scope and functions</strong> (LEGB rule, closures, decorators, generators).</li>
+                <li><strong>Diagnose tracebacks</strong> (<code>TypeError</code>, <code>KeyError</code>, <code>AttributeError</code>, <code>UnboundLocalError</code>).</li>
+                <li><strong>Guide PEP 8 idioms</strong> and <em>The Zen of Python</em> principles.</li>
+              </ul>
+              <p><em>Note: Questions outside Python will be politely declined to maintain domain precision.</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggestion Chips -->
+      <div class="chips-container" id="chips-container">
+        <span class="chips-label">Try asking:</span>
+        <button class="chip" data-prompt="Why does using a mutable default argument like def append_item(x, target=[]) cause unexpected bugs?">
+          Mutable Defaults Bug
+        </button>
+        <button class="chip" data-prompt="Explain how the LEGB scope resolution rule works in Python with a code example.">
+          LEGB Scope Rule
+        </button>
+        <button class="chip" data-prompt="What is the exact mechanical difference between __new__ and __init__ in Python?">
+          __new__ vs __init__
+        </button>
+        <button class="chip" data-prompt="Explain how Python list comprehensions work under the hood compared to standard loops.">
+          List Comprehensions
+        </button>
+        <button class="chip chip-test" data-prompt="Can you give me a recipe for baking chocolate chip cookies?">
+          ⚠️ Test Out-of-Scope
+        </button>
+        <button class="chip chip-test" data-prompt="How do I configure the quantum_teleporter_v9 Python package?">
+          ❓ Test 'I don't know'
+        </button>
+      </div>
+
+      <!-- Bottom Chat Input Bar -->
+      <div class="chat-input-bar">
+        <form id="chat-form" class="input-form">
+          <textarea
+            id="user-input"
+            rows="1"
+            placeholder="Ask a Python question or paste code here... (Enter to send, Shift+Enter for newline)"
+            required
+          ></textarea>
+          <button type="submit" id="btn-send" class="btn btn-send" title="Send Message">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+          </button>
+        </form>
+        <div class="input-footer">
+          <span>PyMentor follows strict Python domain boundaries &middot; Latency & chat history are logged to SQLite</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- SQLite Database Logs Modal Drawer -->
+  <div class="modal-overlay" id="logs-modal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h2>SQLite Chat Logs & Analytics</h2>
+          <span class="db-tag">data/pymentor_logs.db</span>
+        </div>
+        <div class="modal-actions">
+          <button id="btn-refresh-logs" class="btn btn-small">🔄 Refresh</button>
+          <button id="btn-close-modal" class="btn btn-small btn-close">&times;</button>
+        </div>
+      </div>
+
+      <!-- Analytics Cards -->
+      <div class="analytics-grid" id="analytics-grid">
+        <div class="analytics-card">
+          <span class="card-val" id="metric-total">0</span>
+          <span class="card-lbl">Total Interactions</span>
+        </div>
+        <div class="analytics-card">
+          <span class="card-val" id="metric-latency">0 ms</span>
+          <span class="card-lbl">Avg Response Time</span>
+        </div>
+        <div class="analytics-card">
+          <span class="card-val" id="metric-tokens">0</span>
+          <span class="card-lbl">Tokens Processed</span>
+        </div>
+        <div class="analytics-card card-success">
+          <span class="card-val" id="metric-success">0</span>
+          <span class="card-lbl">In-Scope (Success)</span>
+        </div>
+        <div class="analytics-card card-warning">
+          <span class="card-val" id="metric-oos">0</span>
+          <span class="card-lbl">Out-of-Scope Declined</span>
+        </div>
+      </div>
+
+      <!-- Logs Table -->
+      <div class="modal-body">
+        <div class="table-container">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Timestamp (UTC)</th>
+                <th>Status</th>
+                <th>Latency</th>
+                <th>User Query</th>
+                <th>Assistant Response</th>
+              </tr>
+            </thead>
+            <tbody id="logs-table-body">
+              <tr><td colspan="6" style="text-align: center;">Loading database logs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CDN Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
